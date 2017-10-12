@@ -1,0 +1,27 @@
+{
+  "name": "coubars",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "browserify -t dombarsify demo/index.js -o demo/index.bundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bruceman/coubars.git"
+  },
+  "keywords": [
+    "coubars",
+    "handlebars"
+  ],
+  "author": "bruceman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bruceman/coubars/issues"
+  },
+  "homepage": "https://github.com/bruceman/coubars#readme",
+  "devDependencies": {
+    "dombars": "^0.6.2",
+    "dombarsify": "0.0.3"
+  }
+}
