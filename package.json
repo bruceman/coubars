@@ -1,10 +1,11 @@
 {
   "name": "coubars",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "browserify -t dombarsify demo/index.js -o demo/index.bundle.js"
+    "build": "rollup -c",
+    "dev": "rollup -c -w"
   },
   "repository": {
     "type": "git",
@@ -21,7 +22,17 @@
   },
   "homepage": "https://github.com/bruceman/coubars#readme",
   "devDependencies": {
-    "dombars": "^0.6.2",
-    "dombarsify": "0.0.3"
+    "babel-core": "^6.26.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-latest": "^6.24.1",
+    "gulp": "^3.9.1",
+    "rollup": "^0.50.0",
+    "rollup-plugin-babel": "^3.0.2",
+    "rollup-plugin-commonjs": "^8.2.1",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-watch": "^4.3.1"
+  },
+  "dependencies": {
+    "handlebars": "^4.0.10"
   }
 }

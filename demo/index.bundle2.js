@@ -1,3 +1,9 @@
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(factory());
+}(this, (function () { 'use strict';
+
 var dombars = require('dombars/runtime');
 
 dombars.subscribe = function (obj, name, fn) {
@@ -25,7 +31,7 @@ dombars.registerHelper('upper', function (string, options) {
 
 dombars.registerHelper('currentTime', function (options) {
     var node = document.createTextNode(new Date().toLocaleTimeString());
-  console.log(options)
+  console.log(options);
     // Update the time in 1 second.
     window.setTimeout(options.update, 1000);
   
@@ -47,3 +53,5 @@ document.body.appendChild(template(testData));
   }, 1000);
 
 //browserify -t dombarsify dombars-test.js -o dombars-test-bundle.js
+
+})));
