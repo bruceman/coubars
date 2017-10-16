@@ -1,32 +1,55 @@
-var gulp = require('gulp');
-var rollup = require('rollup');
-var nodeResolve = require('rollup-plugin-node-resolve');
-var commonjs = require('rollup-plugin-commonjs');
-var babel = require('rollup-plugin-babel');
+const fs = require('fs');
+const path = require('path');
+const gulp = require('gulp');
+const rollup = require('rollup');
+const resolve = require('rollup-plugin-node-resolve');
+const commonjs = require('rollup-plugin-commonjs');
+const babel = require('rollup-plugin-babel');
 
-/**
- * Build coubars
- */
-gulp.task('build', function () {
-  return rollup.rollup({
-      input: "./src/test.js",
-      plugins: [
-        nodeResolve(),
+// rollup build config
+const config = {
+    input: 'test.js',
+    plugins: [
+        resolve(),
         commonjs(),
         babel({
-          exclude: 'node_modules/**' // only transpile our source code
+            exclude: 'node_modules/**' // only transpile our source code
         })
-      ],
-    })
-    .then(function (bundle) {
-      bundle.write({
-        format: "cjs",
-        file: "./dist/test.js"
-      });
-    })
+    ],
+    output: {
+        file: 'dist/test.js',
+        format: 'umd'
+    }
+};
+
+gulp.task('build', function () {
+    const output = config.output;
+
+    return rollup.rollup(config)
+        .then(bundle => bundle.generate(output))
+        .then(({code}) => {
+            return write(output.file, code);
+        });
 });
 
-/**
- * The default task run by Gulp.
- */
-gulp.task('default', ['build']);
+function write(dest, code) {
+    return new Promise((resolve, reject) => {
+        function report() {
+            console.log(blue(path.relative(process.cwd(), dest)) + ' ' + getSize(code));
+            resolve();
+        }
+
+        fs.writeFile(dest, code, err => {
+            if (err) return reject(err)
+            report();
+        });
+    })
+}
+
+function getSize(code) {
+    return (code.length / 1024).toFixed(2) + 'kb'
+}
+
+function blue(str) {
+    return '\x1b[1m\x1b[34m' + str + '\x1b[39m\x1b[22m'
+}
