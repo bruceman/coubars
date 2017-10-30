@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "gulp build"
+    "build": "gulp build",
+    "jison": "jison"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,8 @@
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.6.0",
     "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "jison": "^0.4.18",
     "rollup": "^0.50.0",
     "rollup-plugin-babel": "^3.0.2",
     "rollup-plugin-commonjs": "^8.2.1",
