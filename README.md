@@ -1,4 +1,0 @@
-# coubars
-
-### build
-gulp build
