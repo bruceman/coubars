@@ -4,7 +4,7 @@ import Handlebars from 'handlebars/runtime';
 declare function require(path: string): any;
 
 Handlebars.registerHelper('pre-text', function (txt, options) {
-    return `pre text = ${txt}! \n\n ${options.fn(this)}`;
+    return options.fn ? `pre text = ${txt}! \n\n ${options.fn(this)}` : `pre text = ${txt}!`;
 });
 
 

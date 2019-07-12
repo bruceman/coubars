@@ -1,7 +1,11 @@
 <div>
-    <p>pre->{{pre-text}}</p>
-    <p> {{#hello 'good'}}123123{{/hello}}</p>
-    {{#unless abc}}
-        <p>abc</p>
+    <p>1 => {{{hello 'aaaa'}}}</p>
+    <p>2 => {{#hello 'bbbb'}} 22222{{/hello}}</p>
+    <p>3 => {{pre-text}}</p>
+    <p>
+        4 => {{#pre-text}}4444{{/pre-text}}
+    </p>
+    {{#unless aaa}}
+        <p>5 => 5555</p>
     {{/unless}}
 </div>

@@ -29,7 +29,7 @@ module.exports = {
                 test: /\.hbs$/,
                 exclude: /(node_modules)/,
                 use: {
-                    loader: 'handlebars-loader?helperDirs[]=' + helpersPath
+                    loader: 'handlebars-loader?debug=true&helperDirs[]=' + helpersPath
                 }
             }
         ]

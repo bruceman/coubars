@@ -38,8 +38,5 @@
   },
   "peerDependencies": {
     "handlebars": "4.1.2"
-  },
-  "dependencies": {
-    "handlebars": "^4.1.2"
   }
 }
