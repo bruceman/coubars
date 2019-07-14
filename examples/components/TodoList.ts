@@ -8,12 +8,14 @@ import { component, Component } from "../../index";
     template: require('./TodoList.hbs')
 })
 export default class TodoList extends Component {
-
+    
     /**
      * componentDidMount
      */
     public componentDidMount() {
         console.log('totolist ... init event');
-
+        if (this.props.callback) {
+            this.props.callback();
+        }
     }
 }

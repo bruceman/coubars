@@ -4,8 +4,8 @@ import Handlebars from 'handlebars/runtime';
  * Define base component functions
  */
 export class Component {
-    private props: any;
-    private state: any;
+    public props: any;
+    public state: any;
 
     public constructor(props = {}) {
         this.props = props;
@@ -84,6 +84,8 @@ export function component(config: ComponentConfig) {
                     instance.componentWillMount();
                 }
                 console.log(options);
+                // generate a component id and append it to  html
+                // instance.component_id = this id
                 return instance.render() + (options.fn ? options.fn(this) : '');
             });
         });

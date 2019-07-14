@@ -7,4 +7,10 @@ import TodoList from "./TodoList";
     components: [TodoList]
 })
 export default class App extends Component {
+    state: any = {
+        items: ["aaa", "bbb"],
+        func: function () {
+            alert('app function called');
+        }
+    }
 }
