@@ -1,19 +1,29 @@
+import Handlebars from 'handlebars/runtime';
+
 /**
  * Define base component functions
  */
-export default class Component {
+export class Component {
     private props: any;
+    private state: any;
 
     public constructor(props = {}) {
         this.props = props;
     }
 
-    /**
-     * The container that include the component, can be override
-     */
-    public getContainer() {
-        const { container } = this.props;
-        return container;
+    public componentWillMount(): void {
+    }
+
+    public componentDidMount(): void {
+    }
+
+    public componentWillUpdate(): void {
+    }
+
+    public componentDidUpdate(): void {
+    }
+
+    public shouldComponentUpdate(): void {
     }
 
     /**
@@ -26,23 +36,62 @@ export default class Component {
     /**
      * The data for rendering Handlebars template, can be override.
      */
-    public getData(): any {
-        const { data } = this.props;
-        return data;
+    public getState(): any {
+        return this.state;
     }
 
     /**
-     * Render the component in container
+     * setState
+     */
+    public setState(newState: any) {
+        this.state = newState;
+    }
+
+    /**
+     * Render to string
      */
     public render() {
-        const container = this.getContainer();
         const tpl = this.getTemplate();
-
-        if (container && tpl) {
-            container.insertAdjacentHTML('beforeEnd', tpl(this.getData()));
-            return true;
+        if (tpl) {
+            return tpl(Object.assign({}, this.props, this.state));
         }
 
-        return false;
+        return "";
+    }
+}
+
+
+
+// decorator @component
+
+interface ComponentConfig {
+    template?: any;
+    style?: any;
+    components?: any;
+}
+
+export function component(config: ComponentConfig) {
+    if (config.components) {
+        config.components.forEach(component => {
+            // register helper
+            console.log(`register helper -> ${component.name}`);
+            Handlebars.registerHelper(component.name, function (options) {
+                const instance = new component(options.hash || {});
+                if (instance.componentWillMount) {
+                    console.log(`componentWillMount -> ${component.name}`);
+                    instance.componentWillMount();
+                }
+                console.log(`render -> ${component.name}`);
+                console.log(options);
+                return instance.render() + (options.fn ? options.fn(this) : '');
+                // return component.name;
+            });
+        });
+    }
+    return function (target: Function) {
+        // register new functions
+        target.prototype.render = function () {
+            return config.template(this.getState ? this.getState() : {});
+        }
     }
 }

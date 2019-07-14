@@ -1,11 +1,12 @@
-import Text from './components/Text';
+// import {render} from "../lib/utils";
+import { render } from "../index";
+import App from './components/App';
 
 
-const container = document.getElementById('app');
-
-function test() {
-    const txt = new Text({container});
-    console.log(txt.render());
+function init() {
+    const app = new App();
+    render('app', app);
+    console.log(app);
 }
 
-test();
+init();
