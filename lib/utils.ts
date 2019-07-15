@@ -1,5 +1,23 @@
+// match tag start part, for example: <div ...>...</div> => <div
+const TAGSTART = /(<[a-zA-Z]+)\s*([^>]*>)/;
 
-// render component in selector
-export function render(selector: string, component: any) {
-    document.getElementById('app').innerHTML = component.render();
+// add id attribute on the first tag
+export function appendId(html:string, id:string): string {
+    if (!html || !id) {
+        return html;
+    }
+
+    return html.replace(TAGSTART, `$1 id="${id}" $2`);
+}
+
+let id = 0;
+// generate component id
+export function generateId(name:string): string {
+    return `${name}-${id++}`;
+}
+
+
+let funcId = 1;
+export function generateFunctionName() {
+    return `func${funcId++}-${new Date().getTime()}`
 }

@@ -1,11 +1,9 @@
-// import {render} from "../lib/utils";
-import { render } from "../index";
+import { renderComponent } from "../index";
 import App from './components/App';
-
 
 function init() {
     const app = new App();
-    render('app', app);
+    renderComponent('app', app);
     console.log(app);
 }
 

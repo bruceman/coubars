@@ -33,7 +33,7 @@ module.exports = {
                     options: {
                         debug: true,
                         helperDirs: [helpersPath],
-                        knownHelpers: ['pre-text', 'TodoList']
+                        knownHelpers: ['pre-text', 'TodoList', 'handler']
                     }
                 }
             }
