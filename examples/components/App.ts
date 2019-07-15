@@ -10,7 +10,7 @@ export default class App {
     state: any = {
         items: ["aaa", "bbb"],
         func: function () {
-            alert('app function called');
+            console.log('app function called');
         }
     }
 

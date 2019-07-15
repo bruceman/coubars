@@ -1,5 +1,5 @@
 import Handlebars from 'handlebars/runtime';
-import { appendId, generateId, generateFunctionName, isEmpty} from "./utils";
+import { appendId, generateCid, generateFunctionName, isEmpty} from "./utils";
 
 // track current component render tree
 let renderStacks = [];
@@ -10,7 +10,7 @@ let eventHandlers = {};
 // show debug info
 let debug = true;
 
-
+// just return empty string
 function noop() {
     return '';
  }
@@ -46,7 +46,6 @@ Handlebars.registerHelper('handler', (handler, options) => {
     if (debug) {
         console.log(`add new event handler "${funcName}" for "${context.constructor.name}.${handler}"`);
     }
-
     return `$$handler("${funcName}")`;
 });
 
@@ -61,7 +60,7 @@ interface ComponentConfig {
 function componentLoop(instance: any, options: any): void {
     const componentName = instance.constructor.name || 'Object';
     // set a unique componnet id
-    instance.cid = generateId(componentName);
+    instance.cid = generateCid(componentName);
     // save current render context
     renderStacks.push(instance);
 
@@ -80,7 +79,9 @@ function componentLoop(instance: any, options: any): void {
     return html;
 }
 
-/**
+/** 
+ * a decorator that enhance class as a componnet
+ *
  * @componnet decorator 
  */
 export function component(config: ComponentConfig) {
@@ -123,12 +124,12 @@ export function component(config: ComponentConfig) {
 /**
  * render component in given selector
  */
-export function renderComponent(selector: string, component: any): void {
+export function renderComponent(selector: string, componentInstance: any): void {
     // reset render stack for each root componnet 
     renderStacks = [];
     // render componet into document
-    document.getElementById(selector).innerHTML = componentLoop(component);
-    const children = component.children || [];
+    document.getElementById(selector).innerHTML = componentLoop(componentInstance);
+    const children = componentInstance.children || [];
     // trigger componentDidMount for all children
     children.forEach(child => {
         if (debug) {
@@ -139,7 +140,7 @@ export function renderComponent(selector: string, component: any): void {
 
     // triggle root component componentDidMount
     if (debug) {
-        console.log(`call ${component.constructor.name}.componentDidMount:${component.cid}`);
+        console.log(`call ${componentInstance.constructor.name}.componentDidMount:${componentInstance.cid}`);
     }
-    component.componentDidMount && component.componentDidMount();
+    componentInstance.componentDidMount && componentInstance.componentDidMount();
 }

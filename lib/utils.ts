@@ -10,10 +10,10 @@ export function appendId(html:string, id:string): string {
     return html.replace(TAGSTART, `$1 id="${id}" $2`);
 }
 
-let id = 0;
+let cid = 0;
 // generate component id
-export function generateId(name:string): string {
-    return `${name}-${id++}`;
+export function generateCid(name:string): string {
+    return `${name}-${cid++}`;
 }
 
 
