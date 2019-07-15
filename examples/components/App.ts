@@ -13,4 +13,9 @@ export default class App {
             alert('app function called');
         }
     }
+
+    clickHandler(event) {
+        console.log('app handler');
+        console.log(event);
+    }
 }

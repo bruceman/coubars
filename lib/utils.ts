@@ -21,3 +21,7 @@ let funcId = 1;
 export function generateFunctionName() {
     return `func${funcId++}-${new Date().getTime()}`
 }
+
+export function isEmpty(obj) {
+    return obj ? Object.keys(obj).length === 0 && obj.constructor === Object : false;
+}
