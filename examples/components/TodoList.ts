@@ -31,8 +31,18 @@ export default class TodoList {
         console.log('click handler');
         console.log(params);
         // this.setState({name: 'dddd'});
-        this.updateComponent();
+        this.updateComponent(true);
 
         console.log(this.getData());
+    }
+
+    public noUpdate(event) {
+        console.log('---no update --');
+        console.log(event);
+        this.updateComponent();
+    }
+
+    public componentShouldUpdate() {
+        return false;
     }
 }

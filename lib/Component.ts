@@ -120,9 +120,8 @@ export function component(config: ComponentConfig) {
         // render component 
         prototype.render = function () {
             const template = this.template || noop;
-            const name = this[DATA_KEY] || 'props';
-            const ctx = typeof this[name] === 'function' ? this[name]() : this[name];
-            return template(ctx || {});
+            this.__context = getRenderContext(this);
+            return template(this.__context);
         }
 
         // get DOM node of componnet
@@ -132,15 +131,24 @@ export function component(config: ComponentConfig) {
 
         // call this to re-render component
         prototype.updateComponent = function (force: boolean) {
-            // notify children componnets to clear resources
-            unmountComponent(this);
-            renderComponent(this.cid, this, true);
+            const newContext = getRenderContext(this);
+            const shouldUpdate = this.componentShouldUpdate ? 
+                this.componentShouldUpdate(this.__context, newContext) : this.__context !== newContext;
+            if (force || shouldUpdate) {
+                // notify children componnets to clear resources
+                unmountComponent(this);
+                renderComponent(this.cid, this, true);
+            }
         }
     }
 }
 
+function getRenderContext(component: any) {
+    const name = component[DATA_KEY] || 'props';
+    return typeof component[name] === 'function' ? component[name]() : component[name];
+}
+
 // recursive call all children's componentWillUnmount
-// TODO: clear event listenrs
 function unmountComponent(component) {
     if (component.children) {
         component.children.forEach(child => {
