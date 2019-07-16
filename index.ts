@@ -1,4 +1,2 @@
-import {component, renderComponent} from "./lib/component";
+export * from "./lib/component";
 
-// easy access
-export  {component, renderComponent};

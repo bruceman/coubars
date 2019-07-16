@@ -1,6 +1,8 @@
 import Handlebars from 'handlebars/runtime';
 import { appendId, generateCid, generateFunctionName, isEmpty} from "./utils";
 
+const DATA_KEY = '__DATA-KEY';
+
 // track current component render tree
 let renderStacks = [];
 
@@ -106,29 +108,69 @@ export function component(config: ComponentConfig) {
     // enhance component class
     return function (target: any) {
         // set children references
-        target.prototype.children = children;
+        const prototype = target.prototype;
+        prototype.template = config.template;
+        prototype.children = children;
 
         // render component 
-        target.prototype.render = function () {
-            const template = config.template || noop;
-            return template(Object.assign({}, this.props, this.state));
+        prototype.render = function () {
+            const template = this.template || noop;
+            const name = this[DATA_KEY] || 'props';
+            const ctx = typeof this[name] === 'function' ? this[name]() : this[name];
+            return template(ctx || {});
         }
 
         // get DOM node of componnet
-        target.prototype.getElement = function () {
+        prototype.getElement = function () {
             return document.getElementById(this.cid);
+        }
+
+        // call this to re-render component
+        prototype.updateComponent = function (force: boolean) {
+            // notify children componnets to clear resources
+            unmountComponent(this);
+            renderComponent(this.cid, this, true);
         }
     }
 }
 
+// recursive call all children's componentWillUnmount
+// TODO: clear event listenrs
+function unmountComponent(component) {
+    if (component.children) {
+        component.children.forEach(child => {
+            umountComponent(child);
+        });
+    }
+    component.componentWillUnmount && component.componentWillUnmount();
+}
+
+/**
+ * mark a method/property that will be used to get data for rendering template
+ * @data decorator
+ */
+export function data(target: any, name: string) {
+    if (debug) {
+        console.log(`@data -> ${target.constructor.name}.${name}`);
+    }
+    target[DATA_KEY] = name;
+};
+
 /**
  * render component in given selector
  */
-export function renderComponent(selector: string, componentInstance: any): void {
+export function renderComponent(selector: string, componentInstance: any, replace: boolean): void {
     // reset render stack for each root componnet 
     renderStacks = [];
     // render componet into document
-    document.getElementById(selector).innerHTML = componentLoop(componentInstance);
+    const html = componentLoop(componentInstance);
+    const el = document.getElementById(selector);
+    if (replace) {
+        // replace exists node
+        el.parentElement.replaceChild(createElement(appendId(html, componentInstance.cid)), el);
+    } else {
+        el.innerHTML = html;
+    }
     const children = componentInstance.children || [];
     // trigger componentDidMount for all children
     children.forEach(child => {
@@ -143,4 +185,11 @@ export function renderComponent(selector: string, componentInstance: any): void 
         console.log(`call ${componentInstance.constructor.name}.componentDidMount:${componentInstance.cid}`);
     }
     componentInstance.componentDidMount && componentInstance.componentDidMount();
+}
+
+function createElement(html: string) {
+  const div = document.createElement('div');
+  div.innerHTML = html.trim();
+  // Change this to div.childNodes to support multiple top-level nodes
+  return div.firstChild; 
 }
