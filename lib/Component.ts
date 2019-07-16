@@ -44,6 +44,11 @@ Handlebars.registerHelper('handler', (handler, options) => {
             context[handler].call(context, options.hash, window.event);
         }
     }
+    // keep all registered listeners of component
+    if (!context.__listeners) {
+        context.__listeners = [];
+    }
+    context.__listeners.push(funcName);
 
     if (debug) {
         console.log(`add new event handler "${funcName}" for "${context.constructor.name}.${handler}"`);
@@ -142,7 +147,22 @@ function unmountComponent(component) {
             umountComponent(child);
         });
     }
+    if (debug) {
+        console.log(`call ${component.constructor.name}.componentWillUnmount:${component.cid}`);
+    }
     component.componentWillUnmount && component.componentWillUnmount();
+
+    // remove all registered listenres of components
+    if (component.__listeners) {
+        component.__listeners.forEach(funcName => {
+            if (debug) {
+                console.log(`remove event listener for ${component.constructor.name}:${component.cid} -> ${funcName}`);
+            }
+            delete eventHandlers[funcName];
+        });
+    }
+
+    component.__listeners = null;
 }
 
 /**
