@@ -29,7 +29,7 @@
     "@babel/preset-env": "^7.5.2",
     "@babel/preset-typescript": "7.3.3",
     "babel-loader": "^8.0.6",
-    "handlebars-loader": "1.7.1",
+    "handlebars-loader": "1.7.3",
     "rimraf": "2.6.3",
     "ts-loader": "6.0.4",
     "typescript": "3.5.3",
